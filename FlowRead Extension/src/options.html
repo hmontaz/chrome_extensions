@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Flow Read Options</title>
+	<script src="scripts/jquery.3.7.1.js"></script>
+	<script src="scripts/settings.js"></script>
+	<script src="scripts/colorTools.js"></script>
+	<link rel="stylesheet" href="stylesheets/dark.css" />
+	<link rel="stylesheet" href="stylesheets/toggleSwitch.css" />
+</head>
+
+<body>
+	<h2>Flow Read Options</h2>
+	<form id="options-form" style="width:260px;">
+		<table>
+			<tr>
+				<td><label for="cbEnabled"></label>Visible</td>
+				<td>
+					<label class="switch">
+						<input id="cbEnabled" type="checkbox">
+						<span class="slider round"></span>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<span class="color-preset" data-color="#ffffff"></span>
+					<span class="color-preset" data-color="#000000"></span>
+					<span class="color-preset" data-color="#ffff00"></span>
+					<span class="color-preset" data-color="#00ff00"></span>
+					<span class="color-preset" data-color="#ff0000"></span>
+					<span class="color-preset" data-color="#0000ff"></span>
+					<span class="color-preset" data-color="#ff00ff"></span>
+					<span class="color-preset" data-color="#00ffff"></span>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="color">Color</label></td>
+				<td><input id="txtColor" type="color"></td>
+			</tr>
+			<tr>
+				<td><label for="opacity">Opacity</label></td>
+				<td><input id="txtOpacity" type="range" step="0.08" min=".05" max=".85"></td>
+			</tr>
+			<tr>
+				<td style="min-width:100px;"><label for="height">Height</label></td>
+				<td><input id="txtHeight" type="range" min="10" max="100" step="1"></td>
+			</tr>
+			<tr>
+				<td>Excluded Sites:</td>
+				<td></td>
+				<!-- <td>Current Host:<span id="txtCurrentHost" class="note"></span></td> -->
+			</tr>
+			<tr>
+				<td colspan="2">
+					<textarea id="txtExcludedSites" rows="5" style="width:100%;" style="resize: vertical;"></textarea>
+					<div class="note">One site per line, e.g. <code>www.example.com</code></div>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<script src="scripts/options.js"></script>
+</body>
+
+</html>

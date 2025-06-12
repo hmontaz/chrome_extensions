@@ -1,0 +1,33 @@
+{
+	"manifest_version": 3,
+	"name": "Flow Read",
+	"version": "1.0.1",
+	"description": "Adds a customizable reading guide to help you stay focused and track lines more easily across articles, code, or text.",
+	"content_scripts": [
+		{
+			"matches": [
+				"<all_urls>"
+			],
+			"js": [
+				"scripts/settings.js",
+				"scripts/content.js",
+				"scripts/jquery.3.7.1.js"
+			]
+		}
+	],
+	"action": {
+		"default_popup": "options.html",
+		"default_icon": "images/icon-128.png"
+	},
+	"options_page": "options.html",
+	"permissions": [
+		"storage",
+		"activeTab"
+	],
+	"background": {
+		"service_worker": "scripts/background.js"
+	},
+	"icons": {
+		"128": "images/icon-128.png"
+	}
+}
