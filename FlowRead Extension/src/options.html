@@ -4,10 +4,12 @@
 <head>
 	<title>Flow Read Options</title>
 	<script src="scripts/jquery.3.7.1.js"></script>
+	<script src="scripts/utils.js"></script>
 	<script src="scripts/settings.js"></script>
 	<script src="scripts/colorTools.js"></script>
 	<link rel="stylesheet" href="stylesheets/dark.css" />
 	<link rel="stylesheet" href="stylesheets/toggleSwitch.css" />
+	<link rel="stylesheet" href="stylesheets/select-dark.css" />
 </head>
 
 <body>
@@ -49,13 +51,25 @@
 				<td><input id="txtHeight" type="range" min="10" max="100" step="1"></td>
 			</tr>
 			<tr>
-				<td>Excluded Sites:</td>
-				<td></td>
-				<!-- <td>Current Host:<span id="txtCurrentHost" class="note"></span></td> -->
+				<td>Mode:</td>
+				<td>
+					<select id="ddlMode">
+						<option value="blacklist">Blacklist</option>
+						<option value="whitelist">Whitelist</option>
+					</select>
+				</td>
 			</tr>
-			<tr>
+			<tr id="trExcludedSites">
 				<td colspan="2">
+					<div>Excluded Sites:</div>
 					<textarea id="txtExcludedSites" rows="5" style="width:100%;" style="resize: vertical;"></textarea>
+					<div class="note">One site per line, e.g. <code>www.example.com</code></div>
+				</td>
+			</tr>
+			<tr id="trIncludedSites">
+				<td colspan="2">
+					<div>Whitelisted Sites:</div>
+					<textarea id="txtIncludedSites" rows="5" style="width:100%;" style="resize: vertical;"></textarea>
 					<div class="note">One site per line, e.g. <code>www.example.com</code></div>
 				</td>
 			</tr>

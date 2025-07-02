@@ -9,9 +9,17 @@
 				"<all_urls>"
 			],
 			"js": [
+				"scripts/jquery.3.7.1.js"
+			]
+		},
+		{
+			"matches": [
+				"<all_urls>"
+			],
+			"js": [
 				"scripts/settings.js",
 				"scripts/content.js",
-				"scripts/jquery.3.7.1.js"
+				"scripts/utils.js"
 			]
 		}
 	],

@@ -3,11 +3,24 @@ let txtColor = null;
 let txtOpacity = null;
 let cbEnabled = null;
 let txtExcludedSites = null;
-const defaultHosts = ['youtube.com', 'facebook.com', 'twitter.com', 'instagram.com', 'music.youtube.com', 'tiktok.com', 'x.com']
+let txtIncludedSites = null;
+let ddlMode = null;
+let trExcludedSites = null;
+let trIncludedSites = null;
+
+function splitSites(sites) {
+	return sites.split('\n')
+		.map(s => normalizeHost(s))
+		.filter(s => s.length > 0)
+		.map(s => s.toLowerCase())
+		.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+}
 
 function SaveSettings() {
 	const settings = {
-		excludedSites: txtExcludedSites.val().split('\n').map(s => s.trim()).filter(s => s.length > 0),
+		mode: ddlMode.val(),
+		excludedSites: splitSites(txtExcludedSites.val()),
+		includedSites: splitSites(txtIncludedSites.val()),
 		rectangleHeight: parseInt(txtHeight.val()),
 		rectangleColor: txtColor.val(),
 		rectangleOpacity: parseFloat(txtOpacity.val()),
@@ -15,18 +28,21 @@ function SaveSettings() {
 	}
 
 	Settings.save(settings)
-	//chrome.storage.sync.set({ settingsSavedOn: new Date().getTime(), settings: { ...Settings.default, ...settings } }, () => {
-	//	console.log("Settings saved!")
-	//});
+	LoadSettings()
 }
 function LoadSettings() {
 	Settings.read(function ({ settings }) {
-		var excludedSites = settings.excludedSites || defaultHosts;
+		let excludedSites = settings.excludedSites/*|| defaultExcludedHosts;*/
+		let includedSites = settings.includedSites
 		txtHeight.val(settings.rectangleHeight)
 		txtColor.val(settings.rectangleColor)
 		txtOpacity.val(settings.rectangleOpacity)
 		cbEnabled.prop('checked', settings.enabled)
+		ddlMode.val(settings.mode)
 		txtExcludedSites.val(excludedSites.join('\n'))
+		txtIncludedSites.val(includedSites.join('\n'))
+		trExcludedSites.toggle(settings.mode === 'blacklist')
+		trIncludedSites.toggle(settings.mode === 'whitelist')
 	})
 }
 function SetColor(color) {
@@ -35,11 +51,20 @@ function SetColor(color) {
 }
 
 $(document).ready(function () {
+	initializeUI();
+})
+
+function initializeUI() {
 	txtHeight = $('#txtHeight')
 	txtColor = $('#txtColor')
 	txtOpacity = $('#txtOpacity')
 	cbEnabled = $('#cbEnabled')
+	ddlMode = $('#ddlMode')
 	txtExcludedSites = $('#txtExcludedSites')
+	txtIncludedSites = $('#txtIncludedSites')
+	trExcludedSites = $('#trExcludedSites')
+	trIncludedSites = $('#trIncludedSites')
+
 	let colorPresets = $('.color-preset')
 	colorPresets.each(function () {
 		let color = $(this).attr('data-color')
@@ -56,9 +81,11 @@ $(document).ready(function () {
 	txtOpacity.on('change', function () { SaveSettings() })
 	cbEnabled.on('change', function () { SaveSettings() })
 	txtExcludedSites.on('change', function () { SaveSettings() })
+	txtIncludedSites.on('change', function () { SaveSettings() })
+	ddlMode.on('change', function () { SaveSettings() });
 
 	$('#btnSave').on('click', function () {
-
 		SaveSettings()
 	});
-})
+
+}

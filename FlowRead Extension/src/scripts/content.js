@@ -27,19 +27,23 @@ function createRectangle() {
 
 }
 
-function normalizeHost(host) {
-	// Normalize the host by removing 'www.' prefix and converting to lowercase
-	return host.replace(/^www\./, '').toLowerCase();
-}
 function siteIsExcluded() {
 	excludedSites = settings.excludedSites || [];
 
 	const currentHost = window.location.hostname;
-	return excludedSites.some(site => normalizeHost(currentHost) === normalizeHost(site));
+	return excludedSites.some(site => isMatching(currentHost, site));
 }
+
+function siteIsIncluded() {
+	includedSites = settings.includedSites || [];
+	const currentHost = window.location.hostname;
+	return includedSites.some(site => isMatching(currentHost, site));
+}
+
 function showRectangle() {
 	if (!settings.enabled) return false
-	if (siteIsExcluded()) return false
+	if (settings.mode == 'blacklist' && siteIsExcluded()) return false
+	if (settings.mode == 'whitelist' && !siteIsIncluded()) return false
 	return true;
 }
 function updateRectangle() {

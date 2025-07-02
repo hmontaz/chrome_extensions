@@ -1,6 +1,8 @@
 const Settings = {
 	default: {
-		excludedSites: ['youtube.com', 'facebook.com', 'twitter.com', 'instagram.com', 'music.youtube.com', 'tiktok.com', 'x.com'],
+		mode: 'blacklist', // 'blacklist' or 'whitelist'
+		excludedSites: ['youtube.com', 'facebook.com', 'twitter.com', 'instagram.com', 'music.youtube.com', 'tiktok.com', 'x.com', 'google.com/maps'],
+		includedSites: ['wikipedia.org', 'reddit.com', 'github.com', 'stackoverflow.com', 'quora.com', 'medium.com'],
 		rectangleHeight: 40,
 		rectangleColor: '#ffff00',
 		rectangleOpacity: .2,
