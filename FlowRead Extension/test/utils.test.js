@@ -1,5 +1,4 @@
 const assert = require('assert');
-// const { normalizeHost } = require('../src/scripts/utils.cjs.js');
 const { normalizeHost } = require('../src/scripts/utils.js');
 
 describe('normalizeHost', () => {

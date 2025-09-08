@@ -16,15 +16,25 @@ let dragStarted = false;
 let currentMouseY = 0;
 let y0 = 0;
 
+let currentY = 0;
+let baseY = 0;
+let nextY = null;
+let rafId = null;
+
 function createRectangle() {
 	rectangle = document.createElement("div")
 	document.body.appendChild(rectangle);
 	updateRectangle()
 
-	rectangle.addEventListener("mousedown", startDrag);
-	window.addEventListener("mouseup", stopDrag);
-	window.addEventListener("mousemove", handleMouseMove);
-
+	rectangle.addEventListener("pointerdown", onDown, { passive: false });
+	rectangle.addEventListener("pointermove", onMove, { passive: false });
+	rectangle.addEventListener("pointerup", onUp, { passive: false });
+	rectangle.addEventListener("lostpointercapture", onUp, { passive: false });
+	rectangle.addEventListener("pointercancel", onUp, { passive: false });
+	window.addEventListener("blur", onUp, { passive: false });
+	document.addEventListener("visibilitychange", () => {
+		if (document.hidden) onUp();
+	});
 }
 
 function siteIsExcluded() {
@@ -55,9 +65,9 @@ function updateRectangle() {
 	rectangle.style.cursor = 'grab'
 	rectangle.style.zIndex = 500000;
 
-	rectangle.style.borderTop = "solid 1px #aa0";
-	rectangle.style.borderBottom = "solid 1px #aa0";
-	rectangle.style.boxShadow = "rgba(149, 157, 165, 1) 0px 0px 8px";
+	// rectangle.style.borderTop = "solid 1px #aa0";
+	// rectangle.style.borderBottom = "solid 1px #aa0";
+	// rectangle.style.boxShadow = "rgba(149, 157, 165, 1) 0px 0px 8px";
 
 	rectangle.style.height = settings.rectangleHeight + "px";
 	rectangle.style.backgroundColor = settings.rectangleColor;
@@ -73,30 +83,52 @@ function updateRectangle() {
 }
 
 function dy() {
-	return (currentMouseY - y0) / devicePixelRatio
+	return (currentMouseY - y0) / devicePixelRatio;
+}
 
+function onDown(e) {
+	if (!e.isPrimary) return;
+	dragStarted = true;
+	y0 = e.clientY;
+	currentY = e.clientY;
+	rectangle.setPointerCapture(e.pointerId);
+	updateRectangle();
+	e.preventDefault();
 }
-function startDrag(event) {
-	if (!dragStarted) {
-		dragStarted = true;
-		y0 = currentMouseY
-		event.preventDefault()
-		return false
+
+function onMove(e) {
+	if (!dragStarted) return;
+
+	// if the page was janky and we missed pointerup, stop when buttons is 0
+	if (e.buttons === 0) return onUp(e);
+
+	currentY = e.clientY;
+	const y = baseY + (currentY - y0);
+
+	if (nextY === null) {
+		nextY = y;
+		rafId = requestAnimationFrame(() => {
+			rectangle.style.transform = `translateY(${nextY}px)`;
+			nextY = null;
+		});
+	} else {
+		nextY = y; // coalesce to the latest position
 	}
+
+	e.preventDefault();
 }
-function handleMouseMove(event) {
-	currentMouseY = event.screenY
-	if (dragStarted) {
-		rectangle.style.top = `${rectangleY + dy()}px`
-		event.preventDefault()
-		return false
-	}
-}
-function stopDrag(event) {
-	if (dragStarted) {
-		dragStarted = false;
-		rectangleY = rectangleY + dy()
-		event.preventDefault()
-		return false
-	}
+
+function onUp(e) {
+	if (!dragStarted) return;
+	dragStarted = false;
+
+	// commit the final position using the last known delta
+	baseY = baseY + (currentY - y0);
+	rectangle.style.transform = `translateY(${baseY}px)`;
+
+	try {
+		if (e && e.pointerId != null) rectangle.releasePointerCapture(e.pointerId);
+	} catch { }
+
+	updateRectangle();
 }

@@ -1,7 +1,7 @@
 const Settings = {
 	default: {
 		mode: 'blacklist', // 'blacklist' or 'whitelist'
-		excludedSites: ['youtube.com', 'facebook.com', 'twitter.com', 'instagram.com', 'music.youtube.com', 'tiktok.com', 'x.com', 'google.com/maps'],
+		excludedSites: ['youtube.com', 'facebook.com', 'twitter.com', 'instagram.com', 'music.youtube.com', 'tiktok.com', 'x.com', 'google.com/maps', 'kraken.com'],
 		includedSites: ['wikipedia.org', 'reddit.com', 'github.com', 'stackoverflow.com', 'quora.com', 'medium.com'],
 		rectangleHeight: 40,
 		rectangleColor: '#ffff00',
